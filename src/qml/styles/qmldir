@@ -1,0 +1,6 @@
+# qmldir - QML 模块定义文件
+# 此文件告诉 QML 引擎如何加载模块
+
+module styles
+
+singleton Theme 1.0 Theme.qml
