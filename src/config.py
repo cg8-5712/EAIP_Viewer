@@ -25,18 +25,21 @@ class Config:
 
     # ==================== 目录配置 ====================
     DATA_DIR = BASE_DIR / "data"
-    CACHE_DIR = DATA_DIR / "cache"
-    CHARTS_DIR = DATA_DIR / "charts"
-    LOGS_DIR = BASE_DIR / "logs"
+    CACHE_DIR = BASE_DIR / os.getenv("CACHE_DIR", "cache")
+    LOGS_DIR = BASE_DIR / os.getenv("LOG_DIR", "logs")
+
+    # 航图数据根目录
+    CHART_DATA_ROOT = BASE_DIR / os.getenv("CHART_DATA_ROOT", "Data")
 
     # 确保目录存在
     DATA_DIR.mkdir(exist_ok=True)
     CACHE_DIR.mkdir(exist_ok=True)
-    CHARTS_DIR.mkdir(exist_ok=True)
     LOGS_DIR.mkdir(exist_ok=True)
+    # CHART_DATA_ROOT 由用户提供，不自动创建
 
     # ==================== 数据库配置 ====================
-    DATABASE_URL = os.getenv("DATABASE_URL", f"sqlite:///{DATA_DIR}/database.db")
+    DATABASE_PATH = DATA_DIR / os.getenv("DATABASE_PATH", "eaip_viewer.db").replace("./data/", "")
+    DATABASE_URL = os.getenv("DATABASE_URL", f"sqlite:///{DATABASE_PATH}")
 
     # ==================== 加密配置 ====================
     ENCRYPTION_KEY = os.getenv("ENCRYPTION_KEY", "change-this-in-production")
@@ -55,10 +58,16 @@ class Config:
     QML_DEBUG = os.getenv("QML_DEBUG", "0") == "1"
     QML_HOT_RELOAD = os.getenv("QML_HOT_RELOAD", "0") == "1"
 
+    # ==================== 航图数据配置 ====================
+    DEFAULT_EAIP_VERSION = os.getenv("DEFAULT_EAIP_VERSION", "EAIP2025-07.V1.4")
+
     # ==================== 性能配置 ====================
     CACHE_SIZE_MB = int(os.getenv("CACHE_SIZE_MB", "100"))
     MAX_WORKERS = int(os.getenv("MAX_WORKERS", "4"))
     PDF_RENDER_DPI = int(os.getenv("PDF_RENDER_DPI", "150"))
+    THUMBNAIL_WIDTH = int(os.getenv("THUMBNAIL_WIDTH", "200"))
+    THUMBNAIL_HEIGHT = int(os.getenv("THUMBNAIL_HEIGHT", "280"))
+    MAX_CACHE_FILES = int(os.getenv("MAX_CACHE_FILES", "1000"))
 
     # ==================== 安全配置 ====================
     SESSION_EXPIRE_DAYS = int(os.getenv("SESSION_EXPIRE_DAYS", "30"))
